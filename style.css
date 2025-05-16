@@ -1,0 +1,163 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #e0f7fa, #ffffff);
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background-color: #006064;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+main {
+    flex: 1;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    align-items: center;
+}
+
+h1 {
+    font-size: 2.5em;
+    margin: 0;
+}
+
+h2 {
+    color: #004d40;
+    margin-bottom: 20px;
+}
+
+#form-section,
+#appointments {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 700px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+input,
+select {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
+button,
+.btn-main,
+.btn-edit,
+.btn-delete {
+    padding: 10px 16px;
+    font-size: 0.95rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+
+/* Primary Button */
+
+.btn-main {
+    background-color: #00796b;
+    color: white;
+}
+
+.btn-main:hover {
+    background-color: #004d40;
+}
+
+
+/* Edit Button */
+
+.btn-edit {
+    background-color: #28a745;
+    color: white;
+    margin-right: 5px;
+}
+
+.btn-edit:hover {
+    background-color: #1e7e34;
+}
+
+
+/* Delete Button */
+
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+}
+
+
+/* Add Links Styling (Patient / Doctor) */
+
+.add-link {
+    color: #00796b;
+    font-size: 0.9rem;
+    text-decoration: none;
+    margin-top: -10px;
+    margin-bottom: 5px;
+    display: inline-block;
+    transition: color 0.3s;
+}
+
+.add-link:hover {
+    color: #004d40;
+    text-decoration: underline;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th {
+    background-color: #e0f2f1;
+    color: #004d40;
+    font-weight: bold;
+    padding: 14px;
+    border-bottom: 2px solid #ccc;
+}
+
+td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+tr:nth-child(even) {
+    background-color: #f1f8f9;
+}
+
+footer {
+    background-color: #004d40;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    font-size: 0.9rem;
+}

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clinic Appointment Management</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <header>
+        <h1>Clinic Appointment Management</h1>
+        <nav>
+            <a href="index.html">Home</a> |
+            <a href="appointments.php">Appointments Page</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Booking Form -->
+        <section id="form-section">
+            <h2>Book an Appointment</h2>
+            <div class="form-group">
+
+                <!-- Patient Dropdown -->
+                <label for="patientSelect">Select Patient</label>
+                <select id="patientSelect">
+          <option value="">Select Patient</option>
+        </select>
+                <a href="add_patient.php" class="display:inline-block; margin-top:5px; color:#00796b; font-size: 0.9rem;">+ Add New Patient</a>
+
+                <!-- Doctor Dropdown -->
+                <label for="doctorSelect" style="margin-top:15px;">Select Doctor</label>
+                <select id="doctorSelect">
+          <option value="">Select Doctor</option>
+        </select>
+                <a href="add_doctor.php" class="display:inline-block; margin-top:5px; color:#00796b; font-size: 0.9rem;">+ Add New Doctor</a>
+
+                <!-- Date input -->
+                <label for="date" style="margin-top:15px;">Appointment Date</label>
+                <input type="datetime-local" id="date" />
+
+                <button onclick="bookAppointment()">Book Appointment</button>
+                <button onclick="deleteDuplicates()">Delete Duplicates</button>
+            </div>
+        </section>
+
+        <!-- Appointment List -->
+        <section id="appointments">
+            <h2>Appointments List</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="apptTable">
+                    <!-- Appointments loaded here -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Clinic Management System</p>
+    </footer>
+
+    <!-- JavaScript Section -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            loadAppointments();
+            loadPatients();
+            loadDoctors();
+        });
+
+        function loadPatients() {
+            fetch("get_patients.php")
+                .then(res => res.json())
+                .then(data => {
+                    const select = document.getElementById("patientSelect");
+                    select.innerHTML = '<option value="">Select Patient</option>';
+                    data.forEach(p => {
+                        const opt = document.createElement("option");
+                        opt.value = p.patient_id;
+                        opt.textContent = p.name;
+                        select.appendChild(opt);
+                    });
+                });
+        }
+
+        function loadDoctors() {
+            fetch("get_doctors.php")
+                .then(res => res.json())
+                .then(data => {
+                    const select = document.getElementById("doctorSelect");
+                    select.innerHTML = '<option value="">Select Doctor</option>';
+                    data.forEach(d => {
+                        const opt = document.createElement("option");
+                        opt.value = d.doctor_id;
+                        opt.textContent = d.name;
+                        select.appendChild(opt);
+                    });
+                });
+        }
+
+        function bookAppointment() {
+            const patient_id = document.getElementById("patientSelect").value;
+            const doctor_id = document.getElementById("doctorSelect").value;
+            const date = document.getElementById("date").value;
+
+            if (!patient_id || !doctor_id || !date) {
+                alert("Please select all fields.");
+                return;
+            }
+
+            fetch("insert_appointment.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        patient_id,
+                        doctor_id,
+                        date
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    alert(data.success || data.error || "Done");
+                    loadAppointments();
+                    document.getElementById("date").value = "";
+                    document.getElementById("patientSelect").value = "";
+                    document.getElementById("doctorSelect").value = "";
+                });
+        }
+
+        function deleteDuplicates() {
+            fetch('delete_duplicates.php')
+                .then(res => res.text())
+                .then(msg => {
+                    alert(msg);
+                    loadAppointments();
+                });
+        }
+
+        function loadAppointments() {
+            fetch("get_appointments.php")
+                .then(res => res.json())
+                .then(appointments => {
+                    const table = document.getElementById("apptTable");
+                    table.innerHTML = "";
+
+                    if (appointments.length === 0) {
+                        table.innerHTML = `<tr><td colspan="5">No appointments found.</td></tr>`;
+                        return;
+                    }
+
+                    appointments.forEach(app => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+              <td>${app.patient_name}</td>
+              <td>${app.doctor_name}</td>
+              <td>${new Date(app.appointment_date).toLocaleString()}</td>
+              <td>${app.status}</td>
+              <td>
+                <a href="edit.php?id=${app.id}" class="btn-edit">Edit</a>
+                <a href="delete.php?id=${app.id}" class="btn-delete" onclick="return confirm('Are you sure?')">Delete</a>
+              </td>
+            `;
+                        table.appendChild(row);
+                    });
+                })
+                .catch(err => console.error("Error loading appointments:", err));
+        }
+    </script>
+</body>
+
+</html>
